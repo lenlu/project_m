@@ -1,0 +1,380 @@
+/* Global Styles */
+body {
+    --bg-image: url('../loginpage/4K-Space.jpg');
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.25);
+    --text-light: #f6f7fb;
+    --accent: #6aa6ff;
+    --accent-2: #9b6bff;
+    --success: #2ecc71;
+
+    font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    background: #0b1020;
+    color: var(--text-light);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.bg-overlay {
+    position: fixed;
+    inset: 0;
+    background: 
+        radial-gradient(1200px 600px at 10% -10%, rgba(106, 166, 255, 0.25), transparent 60%),
+        radial-gradient(900px 500px at 90% 110%, rgba(155, 107, 255, 0.25), transparent 60%),
+        linear-gradient(180deg, rgba(0,0,0,0.2), rgba(0,0,0,0.6)),
+        var(--bg-image) center/cover no-repeat fixed;
+    filter: saturate(1.05) contrast(1.05);
+    z-index: -2;
+}
+
+/* Subtle animated particles */
+.bg-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 24px 24px;
+    animation: drift 18s linear infinite;
+    opacity: 0.25;
+}
+
+@keyframes drift {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-24px); }
+}
+
+/* Containers */
+.error-container,
+.download-container,
+.card.file-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px) saturate(120%);
+    -webkit-backdrop-filter: blur(12px) saturate(120%);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* Error Page Styles */
+.error-container {
+    text-align: center;
+    padding: 2.25rem 2rem;
+    max-width: 560px;
+}
+
+.error-code {
+    font-size: clamp(64px, 10vw, 120px);
+    font-weight: 800;
+    letter-spacing: 2px;
+    line-height: 1;
+    background: linear-gradient(135deg, #fff, #b7c7ff 40%, #8bb2ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 10px 30px rgba(59, 130, 246, 0.25);
+    margin-bottom: 0.5rem;
+}
+
+.error-message { font-size: 1.125rem; opacity: 0.9; }
+.hint { font-size: 0.95rem; opacity: 0.7; }
+
+.refresh-btn {
+    padding: 12px 28px;
+    font-size: 1.05rem;
+    background: linear-gradient(135deg, #3fb984, var(--success));
+    color: white;
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+    box-shadow: 0 10px 20px rgba(46, 204, 113, 0.25);
+}
+.refresh-btn:hover { transform: translateY(-2px); filter: brightness(1.05); }
+.refresh-btn:disabled { filter: grayscale(0.4) brightness(0.85); cursor: not-allowed; box-shadow: none; }
+
+/* Download Page Styles */
+.download-container {
+    padding: 2rem;
+}
+
+.page-title {
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    background: linear-gradient(135deg, #fff, #c9d6ff 40%, #a9c1ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 10px 30px rgba(59, 130, 246, 0.25);
+    margin: 0;
+}
+.page-subtitle { opacity: 0.85; margin-top: .25rem; }
+
+.resource-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 18px;
+}
+
+.card.file-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+    transform: translateZ(0);
+    transition: transform .22s ease, box-shadow .22s ease;
+}
+
+.card.file-card::before {
+    content: '';
+    position: absolute; inset: -50% -50% auto auto;
+    width: 120px; height: 120px;
+    background: radial-gradient(closest-side, rgba(106,166,255,.35), transparent);
+    transform: translate(40px, -40px) rotate(25deg);
+    transition: transform .5s ease, opacity .5s ease;
+}
+
+.card.file-card:hover::before { transform: translate(0,0) rotate(0deg); opacity: 0.9; }
+
+.card-icon { font-size: 28px; filter: drop-shadow(0 6px 18px rgba(0,0,0,.3)); }
+
+.card-content { flex: 1; }
+.card-title { font-size: 1.05rem; margin: 0; }
+.card-meta { font-size: .85rem; opacity: .75; margin: .25rem 0 0; }
+
+.card-actions { margin-top: 10px; display: flex; gap: 10px; }
+.btn-ghost {
+    appearance: none; border: 1px solid var(--glass-border);
+    background: transparent; color: var(--text-light);
+    padding: 8px 12px; border-radius: 10px; cursor: pointer;
+    transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+.btn-ghost:hover { background: rgba(255,255,255,.08); transform: translateY(-1px); }
+
+.btn-solid {
+    appearance: none; border: 0; background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff; padding: 8px 12px; border-radius: 10px; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: 0 8px 20px rgba(107, 107, 255, 0.25);
+    transition: transform .2s ease, filter .2s ease, box-shadow .2s ease;
+}
+.btn-solid:hover { transform: translateY(-1px); filter: brightness(1.05); box-shadow: 0 10px 28px rgba(107, 107, 255, 0.35); }
+
+.card.file-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,.45); }
+
+/* Hide old button style inside cards (not used) */
+.download-btn { display: none; }
+
+/* Modal Preview Styles */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 1000;
+    backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: var(--glass-bg);
+    width: 90%;
+    max-width: 1200px;
+    height: 90vh;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--glass-border);
+    animation: modalShow 0.3s ease;
+}
+
+@keyframes modalShow {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--text-light);
+    font-size: 1.25rem;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.modal-body {
+    flex: 1;
+    padding: 0;
+    background: #fff;
+    border-radius: 0 0 16px 16px;
+    overflow: hidden;
+}
+
+#pdfFrame {
+    border: none;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+}
+
+/* Constrain container */
+.container { max-width: 1200px; }
+
+/* Accessibility focus */
+.card.file-card:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Footer */
+.site-footer { margin-top: 32px; padding: 18px 0 28px; position: relative; }
+.footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    align-items: center;
+    justify-content: center;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px) saturate(120%);
+    -webkit-backdrop-filter: blur(10px) saturate(120%);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 14px 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+.footer-brand { font-weight: 700; letter-spacing: .3px; }
+.footer-sep { opacity: .6; }
+.footer-link { color: var(--text-light); text-decoration: none; opacity: .9; transition: opacity .2s ease, color .2s ease; }
+.footer-link:hover { opacity: 1; color: var(--accent); }
+
+/* Error Page Styles */
+.error-container {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.error-code {
+    font-size: 8rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    margin-bottom: 1rem;
+}
+
+.error-message {
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 2rem;
+}
+
+.refresh-btn {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    background: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: transform 0.3s, background 0.3s;
+}
+
+.refresh-btn:hover {
+    background: #27ae60;
+    transform: scale(1.05);
+}
+
+.refresh-btn:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Download Page Styles */
+.download-container {
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.download-container h1 {
+    color: white;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.download-card {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.download-card:hover {
+    transform: translateY(-5px);
+}
+
+.download-card h3 {
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.download-btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+    width: 100%;
+}
+
+.download-btn:hover {
+    background: #2980b9;
+}

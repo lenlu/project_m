@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error 143</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // Check if this is the first visit
+        window.onload = function() {
+            if (localStorage.getItem('hasVisited')) {
+                // Not first visit, redirect to download page immediately
+                window.location.href = 'index2.html';
+            } else {
+                // First visit, show the error page
+                document.querySelector('.error-container').style.display = 'block';
+            }
+        }
+
+        function redirectWithDelay() {
+            // Set the flag in localStorage
+            localStorage.setItem('hasVisited', 'true');
+            
+            // Show loading message
+            document.querySelector('.error-message').textContent = 'Redirecting to downloads...';
+            document.querySelector('.refresh-btn').disabled = true;
+            document.querySelector('.refresh-btn').textContent = 'Please wait...';
+            
+            // Redirect after 3 seconds
+            setTimeout(function() {
+                window.location.href = 'index2.html';
+            }, 3000);
+        }
+    </script>
+</head>
+<body>
+    <div class="bg-overlay"></div>
+    <div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center">
+        <div class="error-container" style="display: none;">
+            <div class="error-code">143</div>
+            <div class="error-message">Error! Something went wrong.</div>
+            <button class="refresh-btn" onclick="redirectWithDelay()">Go to Downloads</button>
+            <p class="hint mt-3">You will be redirected automatically on next visit</p>
+        </div>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
