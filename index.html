@@ -3,49 +3,1034 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error 143</title>
+    <title>Download Files</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- PDF.js CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf_viewer.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <script>
-        // Check if this is the first visit
-        window.onload = function() {
-            if (localStorage.getItem('hasVisited')) {
-                // Not first visit, redirect to download page immediately
-                window.location.href = 'index2.html';
-            } else {
-                // First visit, show the error page
-                document.querySelector('.error-container').style.display = 'block';
-            }
-        }
-
-        function redirectWithDelay() {
-            // Set the flag in localStorage
-            localStorage.setItem('hasVisited', 'true');
-            
-            // Show loading message
-            document.querySelector('.error-message').textContent = 'Redirecting to downloads...';
-            document.querySelector('.refresh-btn').disabled = true;
-            document.querySelector('.refresh-btn').textContent = 'Please wait...';
-            
-            // Redirect after 3 seconds
-            setTimeout(function() {
-                window.location.href = 'index2.html';
-            }, 3000);
-        }
-    </script>
+    <!-- jsPDF for generating receipts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <div class="bg-overlay"></div>
-    <div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center">
-        <div class="error-container" style="display: none;">
-            <div class="error-code">143</div>
-            <div class="error-message">Error! -404- Something went wrong.</div>
-            <button class="refresh-btn" onclick="redirectWithDelay()">Click to Retry</button>
-            <p class="hint mt-3">issue request sent retry </p>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">SkillUp PDFs</a>
+            <div class="ms-auto d-flex align-items-center">
+                <button class="btn btn-outline-light position-relative cart-btn" onclick="openCart()">
+                    🛒 Cart
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartBadge">
+                        0
+                    </span>
+                </button>
+            </div>
         </div>
+    </nav>
+
+    <div class="container py-4">
+        <header class="mb-4 text-center">
+            <h1 class="page-title">Premium Resources</h1>
+            <p class="page-subtitle">Unlock High-Quality PDFs to Accelerate Your Skills</p>
+            <p class="opacity-75 mb-4">Target users: AI/ML, Python Learners, VS Code Beginners</p>
+            
+            <div class="row justify-content-center mb-4">
+                <div class="col-md-8 col-lg-6 d-flex gap-2">
+                    <input type="text" id="searchInput" class="form-control shop-search" placeholder="Search for PDFs..." onkeyup="filterShop()">
+                    <select id="categoryFilter" class="form-select w-auto shop-filter" onchange="filterShop()">
+                        <option value="all">All Categories</option>
+                        <option value="python">Python</option>
+                        <option value="ml">AI & ML</option>
+                        <option value="other">Others</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <div class="resource-grid" id="productGrid">
+            <div class="card file-card product-item" data-category="ml" data-href="AI & Data Scientist Roadmap.pdf" data-price="99" data-name="AI & Data Scientist Roadmap">
+                <div class="card-icon">📄</div>
+                <div class="card-content">
+                    <h3 class="card-title">AI & Data Scientist Roadmap</h3>
+                    <p class="card-meta">PDF • <span class="price-tag fw-bold text-success">₹99</span></p>
+                    <div class="card-actions">
+                        <button class="btn-ghost preview-btn" onclick="openPDFPreview('AI & Data Scientist Roadmap.pdf', this)">Preview</button>
+                        <button class="btn-solid add-to-cart-btn" onclick="addToCart('AI & Data Scientist Roadmap.pdf', 'AI & Data Scientist Roadmap', 99)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card file-card product-item" data-category="ml" data-href="AI & ML DIGITAL NOTES.pdf" data-price="199" data-name="AI & ML Digital Notes">
+                <div class="card-icon">📄</div>
+                <div class="card-content">
+                    <h3 class="card-title">AI & ML Digital Notes</h3>
+                    <p class="card-meta">PDF • <span class="price-tag fw-bold text-success">₹199</span></p>
+                    <div class="card-actions">
+                        <button class="btn-solid add-to-cart-btn" onclick="addToCart('AI & ML DIGITAL NOTES.pdf', 'AI & ML Digital Notes', 199)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card file-card product-item" data-category="python" data-href="Coding Games In Python.pdf" data-price="299" data-name="Coding Games In Python">
+                <div class="card-icon">📄</div>
+                <div class="card-content">
+                    <h3 class="card-title">Coding Games In Python</h3>
+                    <p class="card-meta">PDF • <span class="price-tag fw-bold text-success">₹299</span></p>
+                    <div class="card-actions">
+                        <button class="btn-solid add-to-cart-btn" onclick="addToCart('Coding Games In Python.pdf', 'Coding Games In Python', 299)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card file-card product-item" data-category="ml" data-href="Complete Machine Learning Handwritten Notes.pdf" data-price="399" data-name="Complete ML Handwritten Notes">
+                <div class="card-icon">📄</div>
+                <div class="card-content">
+                    <h3 class="card-title">Complete ML Handwritten Notes</h3>
+                    <p class="card-meta">PDF • <span class="price-tag fw-bold text-success">₹399</span></p>
+                    <div class="card-actions">
+                        <button class="btn-solid add-to-cart-btn" onclick="addToCart('Complete Machine Learning Handwritten Notes.pdf', 'Complete ML Handwritten Notes', 399)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card file-card product-item" data-category="python" data-href="DSA in Python Handwritten Notes.pdf" data-price="349" data-name="DSA in Python Handwritten Notes">
+                <div class="card-icon">📄</div>
+                <div class="card-content">
+                    <h3 class="card-title">DSA in Python Handwritten Notes</h3>
+                    <p class="card-meta">PDF • <span class="price-tag fw-bold text-success">₹349</span></p>
+                    <div class="card-actions">
+                        <button class="btn-solid add-to-cart-btn" onclick="addToCart('DSA in Python Handwritten Notes.pdf', 'DSA in Python Handwritten Notes', 349)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card file-card product-item" data-category="ml" data-href="Hands_On_Machine_Learning_with_Scikit_Learn_Keras_and_TensorFlow.pdf" data-price="499" data-name="Hands-On ML with Scikit-Learn, Keras & TF">
+                <div class="card-icon">📄</div>
+                <div class="card-content">
+                    <h3 class="card-title">Hands-On ML with Scikit-Learn, Keras & TF</h3>
+                    <p class="card-meta">PDF • <span class="price-tag fw-bold text-success">₹499</span></p>
+                    <div class="card-actions">
+                        <button class="btn-solid add-to-cart-btn" onclick="addToCart('Hands_On_Machine_Learning_with_Scikit_Learn_Keras_and_TensorFlow.pdf', 'Hands-On ML with Scikit-Learn, Keras & TF', 499)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card file-card product-item" data-category="python" data-href="Learning Python From Basic To Advance Day 1 to Day 4.pdf" data-price="149" data-name="Learning Python Day 1–4">
+                <div class="card-icon">📄</div>
+                <div class="card-content">
+                    <h3 class="card-title">Learning Python Day 1–4</h3>
+                    <p class="card-meta">PDF • <span class="price-tag fw-bold text-success">₹149</span></p>
+                    <div class="card-actions">
+                        <button class="btn-solid add-to-cart-btn" onclick="addToCart('Learning Python From Basic To Advance Day 1 to Day 4.pdf', 'Learning Python Day 1–4', 149)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card file-card product-item" data-category="other" data-href="Linux Notes.pdf" data-price="49" data-name="Linux Notes">
+                <div class="card-icon">📄</div>
+                <div class="card-content">
+                    <h3 class="card-title">Linux Notes</h3>
+                    <p class="card-meta">PDF • <span class="price-tag fw-bold text-success">₹49</span></p>
+                    <div class="card-actions">
+                        <button class="btn-solid add-to-cart-btn" onclick="addToCart('Linux Notes.pdf', 'Linux Notes', 49)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card file-card product-item" data-category="ml" data-href="Machine Learning Handwritten Notes (1).pdf" data-price="249" data-name="ML Handwritten Notes (1)">
+                <div class="card-icon">📄</div>
+                <div class="card-content">
+                    <h3 class="card-title">ML Handwritten Notes (1)</h3>
+                    <p class="card-meta">PDF • <span class="price-tag fw-bold text-success">₹249</span></p>
+                    <div class="card-actions">
+                        <button class="btn-solid add-to-cart-btn" onclick="addToCart('Machine Learning Handwritten Notes (1).pdf', 'ML Handwritten Notes (1)', 249)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card file-card product-item" data-category="python" data-href="python basic programes.pdf" data-price="79" data-name="Python Basic Programs">
+                <div class="card-icon">📄</div>
+                <div class="card-content">
+                    <h3 class="card-title">Python Basic Programs</h3>
+                    <p class="card-meta">PDF • <span class="price-tag fw-bold text-success">₹79</span></p>
+                    <div class="card-actions">
+                        <button class="btn-solid add-to-cart-btn" onclick="addToCart('python basic programes.pdf', 'Python Basic Programs', 79)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card file-card product-item" data-category="python" data-href="Python Basics to Advanced Notes📚.pdf" data-price="199" data-name="Python Basics to Advanced">
+                <div class="card-icon">📄</div>
+                <div class="card-content">
+                    <h3 class="card-title">Python Basics to Advanced</h3>
+                    <p class="card-meta">PDF • <span class="price-tag fw-bold text-success">₹199</span></p>
+                    <div class="card-actions">
+                        <button class="btn-solid add-to-cart-btn" onclick="addToCart('Python Basics to Advanced Notes📚.pdf', 'Python Basics to Advanced', 199)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card file-card product-item" data-category="python" data-href="Python CheatSheet.pdf" data-price="59" data-name="Python CheatSheet">
+                <div class="card-icon">📄</div>
+                <div class="card-content">
+                    <h3 class="card-title">Python CheatSheet</h3>
+                    <p class="card-meta">PDF • <span class="price-tag fw-bold text-success">₹59</span></p>
+                    <div class="card-actions">
+                        <button class="btn-solid add-to-cart-btn" onclick="addToCart('Python CheatSheet.pdf', 'Python CheatSheet', 59)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card file-card product-item" data-category="python" data-href="Python Developer Roadmap.pdf" data-price="49" data-name="Python Developer Roadmap">
+                <div class="card-icon">📄</div>
+                <div class="card-content">
+                    <h3 class="card-title">Python Developer Roadmap</h3>
+                    <p class="card-meta">PDF • <span class="price-tag fw-bold text-success">₹49</span></p>
+                    <div class="card-actions">
+                        <button class="btn-solid add-to-cart-btn" onclick="addToCart('Python Developer Roadmap.pdf', 'Python Developer Roadmap', 49)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card file-card product-item" data-category="python" data-href="Python Interview questions part 1 Handwritten Notes.pdf" data-price="129" data-name="Python Interview Qs (Part 1)">
+                <div class="card-icon">📄</div>
+                <div class="card-content">
+                    <h3 class="card-title">Python Interview Qs (Part 1)</h3>
+                    <p class="card-meta">PDF • <span class="price-tag fw-bold text-success">₹129</span></p>
+                    <div class="card-actions">
+                        <button class="btn-solid add-to-cart-btn" onclick="addToCart('Python Interview questions part 1 Handwritten Notes.pdf', 'Python Interview Qs (Part 1)', 129)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card file-card product-item" data-category="python" data-href="Python Strings.pdf" data-price="49" data-name="Python Strings">
+                <div class="card-icon">📄</div>
+                <div class="card-content">
+                    <h3 class="card-title">Python Strings</h3>
+                    <p class="card-meta">PDF • <span class="price-tag fw-bold text-success">₹49</span></p>
+                    <div class="card-actions">
+                        <button class="btn-solid add-to-cart-btn" onclick="addToCart('Python Strings.pdf', 'Python Strings', 49)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card file-card product-item" data-category="python" data-href="Python.pdf" data-price="149" data-name="Python.pdf">
+                <div class="card-icon">📄</div>
+                <div class="card-content">
+                    <h3 class="card-title">Python.pdf</h3>
+                    <p class="card-meta">PDF • <span class="price-tag fw-bold text-success">₹149</span></p>
+                    <div class="card-actions">
+                        <button class="btn-solid add-to-cart-btn" onclick="addToCart('Python.pdf', 'Python.pdf', 149)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card file-card product-item" data-category="python" data-href="pythonCheetsheet.pdf" data-price="39" data-name="Python Cheatsheet (alt)">
+                <div class="card-icon">📄</div>
+                <div class="card-content">
+                    <h3 class="card-title">Python Cheatsheet (alt)</h3>
+                    <p class="card-meta">PDF • <span class="price-tag fw-bold text-success">₹39</span></p>
+                    <div class="card-actions">
+                        <button class="btn-solid add-to-cart-btn" onclick="addToCart('pythonCheetsheet.pdf', 'Python Cheatsheet (alt)', 39)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card file-card product-item" data-category="other" data-href="SQL Notes For Beginners .pdf" data-price="199" data-name="SQL Notes For Beginners">
+                <div class="card-icon">📄</div>
+                <div class="card-content">
+                    <h3 class="card-title">SQL Notes For Beginners</h3>
+                    <p class="card-meta">PDF • <span class="price-tag fw-bold text-success">₹199</span></p>
+                    <div class="card-actions">
+                        <button class="btn-solid add-to-cart-btn" onclick="addToCart('SQL Notes For Beginners .pdf', 'SQL Notes For Beginners', 199)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card file-card product-item" data-category="other" data-href="vscode shortcuts windows.pdf" data-price="29" data-name="VS Code Shortcuts (Windows)">
+                <div class="card-icon">📄</div>
+                <div class="card-content">
+                    <h3 class="card-title">VS Code Shortcuts (Windows)</h3>
+                    <p class="card-meta">PDF • <span class="price-tag fw-bold text-success">₹29</span></p>
+                    <div class="card-actions">
+                        <button class="btn-solid add-to-cart-btn" onclick="addToCart('vscode shortcuts windows.pdf', 'VS Code Shortcuts (Windows)', 29)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <footer class="site-footer">
+            <div class="footer-inner container">
+                <div class="footer-brand">Crafted by Arunesh</div>
+                <div class="footer-contact">
+                    <a href="mailto:arunesh12307@outlook.com" class="footer-link">arunesh12307@outlook.com</a>
+                    <span class="footer-sep">•</span>
+                    <a href="https://instagram.com/lenlu_arun" target="_blank" rel="noopener" class="footer-link">@lenlu_arun</a>
+                </div>
+            </div>
+        </footer>
     </div>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <div id="pdfPreview" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="pdfTitle"></h3>
+                <button onclick="closePDFPreview()" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <iframe id="pdfFrame" width="100%" height="100%"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal-overlay">
+        <div class="modal-content cart-modal-content">
+            <div class="modal-header">
+                <h3>Your Shopping Cart</h3>
+                <button onclick="closeCart()" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body p-4" id="cartItemsContainer">
+                <!-- Cart items will be rendered here dynamically -->
+            </div>
+            <div class="modal-footer d-flex justify-content-between align-items-center p-4 border-top">
+                <h4 class="m-0 text-dark">Total: <span id="cartTotal" class="text-success fw-bold">₹0</span></h4>
+                <button class="btn btn-success btn-lg px-5" onclick="proceedToCheckout()" id="checkoutBtn">Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="modal-overlay">
+        <div class="modal-content checkout-modal-content" style="max-width: 600px; height: auto; max-height: 90vh;">
+            <div class="modal-header">
+                <h3>Checkout</h3>
+                <button onclick="closeCheckout()" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body p-4 text-dark" style="overflow-y: auto;">
+                <div id="checkoutForm">
+                    <h5 class="mb-3 border-bottom pb-2">Customer Details</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="checkoutName" placeholder="John Doe" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="checkoutEmail" placeholder="name@example.com" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="checkoutPhone" placeholder="+91 9876543210" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Billing Address</label>
+                        <textarea class="form-control" id="checkoutAddress" rows="2" placeholder="Street Address, City, State, ZIP" required></textarea>
+                    </div>
+
+                    <h5 class="mb-3 mt-4 border-bottom pb-2">Payment Method</h5>
+                    <div class="mb-3 payment-options">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="payCard" value="Card" checked>
+                            <label class="form-check-label" for="payCard">Credit/Debit Card</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="payUPI" value="UPI">
+                            <label class="form-check-label" for="payUPI">UPI</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="payNetBanking" value="NetBanking">
+                            <label class="form-check-label" for="payNetBanking">Net Banking</label>
+                        </div>
+                    </div>
+
+                    <div id="cardDetailsSection">
+                        <div class="mb-3">
+                            <label class="form-label">Card Number (Mock)</label>
+                            <input type="text" class="form-control" placeholder="1234 5678 9101 1121">
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label">Expiry</label>
+                                <input type="text" class="form-control" placeholder="MM/YY">
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label">CVV</label>
+                                <input type="password" class="form-control" placeholder="***">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-success w-100 btn-lg mt-4 shadow-sm" onclick="processPayment()" id="payBtn">
+                        Pay <span id="payTotalAmount"></span>
+                    </button>
+                    <p class="text-center text-muted mt-2 small"><i class="fas fa-lock"></i> Secure SSL Mock Payment</p>
+                </div>
+                
+                <div id="checkoutSuccess" style="display: none;" class="success-screen">
+                    <div class="success-header">
+                        <div class="success-icon">✅</div>
+                        <h3 class="success-title">Payment Successful!</h3>
+                        <p class="success-subtitle">Thank you for your purchase. Your resources are ready to download.</p>
+                    </div>
+                    
+                    <div class="order-summary-card">
+                        <div class="summary-row">
+                            <span class="summary-label">Order ID:</span>
+                            <span class="summary-value" id="successOrderId">ORD-xxxxx</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Date:</span>
+                            <span class="summary-value" id="successDate">--</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Confirmation Sent To:</span>
+                            <span class="summary-value" id="successEmail">--</span>
+                        </div>
+                        <div class="summary-row summary-total">
+                            <span class="summary-label">Total Paid:</span>
+                            <span class="summary-value" id="successTotal">₹0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons mb-4">
+                        <button class="btn btn-primary btn-lg px-5" onclick="downloadReceipt()">
+                            <i class="fas fa-file-pdf"></i> Download PDF Receipt
+                        </button>
+                        <button class="btn btn-outline-primary btn-lg px-5" onclick="emailReceipt()">
+                            <i class="fas fa-envelope"></i> Email Receipt
+                        </button>
+                    </div>
+
+                    <div class="downloads-section">
+                        <h5 class="downloads-title">📚 Your Learning Resources:</h5>
+                        <div id="downloadLinksContainer" class="downloads-grid">
+                            <!-- Links injected here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+      (function() {
+
+        function formatSize(bytes) {
+          if (!bytes || isNaN(bytes)) return null;
+          const units = ['B','KB','MB','GB','TB'];
+          const i = Math.floor(Math.log(bytes) / Math.log(1024));
+          const value = bytes / Math.pow(1024, i);
+          return `${value.toFixed(value >= 100 || i === 0 ? 0 : value >= 10 ? 1 : 2)} ${units[i]}`;
+        }
+
+        async function loadPDF(url, canvas) {
+          try {
+            const loadingTask = pdfjsLib.getDocument(url);
+            const pdf = await loadingTask.promise;
+            const page = await pdf.getPage(1);
+            
+            const viewport = page.getViewport({ scale: 1.5 });
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            const renderContext = {
+              canvasContext: canvas.getContext('2d'),
+              viewport: viewport
+            };
+
+            await page.render(renderContext).promise;
+          } catch (error) {
+            console.error('Error loading PDF:', error);
+            canvas.style.display = 'none';
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'pdf-error';
+            errorMsg.textContent = 'Error loading PDF preview';
+            canvas.parentNode.appendChild(errorMsg);
+          }
+        }
+
+        async function headSize(url) {
+          try {
+            const resp = await fetch(url, { method: 'HEAD' });
+            let len = resp.headers.get('Content-Length');
+            if (!len || isNaN(len)) {
+              const alt = await fetch(url, { headers: { 'Range': 'bytes=0-0' } });
+              const cr = alt.headers.get('Content-Range');
+              if (cr && cr.includes('/')) {
+                len = cr.split('/').pop();
+              }
+            }
+            return len ? parseInt(len, 10) : null;
+          } catch(e) {
+            return null;
+          }
+        }
+
+        
+        function openPDFPreview(pdfUrl, button) {
+            const modal = document.getElementById('pdfPreview');
+            const iframe = document.getElementById('pdfFrame');
+            const title = document.getElementById('pdfTitle');
+            
+            // Get the title from the card
+            const cardTitle = button.closest('.card-content').querySelector('.card-title').textContent;
+            title.textContent = cardTitle;
+            
+            // Set iframe source to the PDF
+            iframe.src = pdfUrl;
+            
+            // Show modal
+            modal.style.display = 'flex';
+            
+            // Disable scroll on body
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePDFPreview() {
+            const modal = document.getElementById('pdfPreview');
+            const iframe = document.getElementById('pdfFrame');
+            
+            // Clear iframe source
+            iframe.src = '';
+            
+            // Hide modal
+            modal.style.display = 'none';
+            
+            // Re-enable scroll on body
+            document.body.style.overflow = 'auto';
+        }
+
+        async function initSizes() {
+            const cards = document.querySelectorAll('.file-card');
+            for (const card of cards) {
+                const href = card.getAttribute('data-href');
+                const meta = card.querySelector('.card-meta');
+                if (!meta) continue;
+                meta.textContent = 'PDF • …';
+                const size = await headSize(href);
+                if (size) {
+                    meta.textContent = `PDF • ${formatSize(size)}`;
+                } else {
+                    meta.textContent = 'PDF • Unknown size';
+                }
+
+                // Add preview button to each card
+                const actions = card.querySelector('.card-actions');
+                if (actions && !actions.querySelector('.preview-btn')) {
+                    const previewBtn = document.createElement('button');
+                    previewBtn.className = 'btn-ghost preview-btn';
+                    previewBtn.textContent = 'Preview';
+                    previewBtn.onclick = () => openPDFPreview(href, previewBtn);
+                    actions.insertBefore(previewBtn, actions.firstChild);
+                }
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('pdfPreview');
+            if (event.target === modal) {
+                closePDFPreview();
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closePDFPreview();
+            }
+        });
+
+        let cart = [];
+
+        function saveCart() {
+            localStorage.setItem('pdfStoreCart', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function loadCart() {
+            const saved = localStorage.getItem('pdfStoreCart');
+            if (saved) {
+                cart = JSON.parse(saved);
+                updateCartUI();
+            }
+        }
+
+        function addToCart(url, title, price) {
+            // Check if already in cart
+            if (cart.find(item => item.url === url)) {
+                showCartNotification(`${title} is already in your cart!`);
+                return;
+            }
+            
+            cart.push({ url, title, price });
+            saveCart();
+            
+            // Visual feedback - update badge
+            const badge = document.getElementById('cartBadge');
+            badge.style.transform = 'scale(1.5)';
+            setTimeout(() => badge.style.transform = 'scale(1)', 300);
+            
+            // Show success notification
+            showAddedNotification(title);
+        }
+        
+        function showAddedNotification(title) {
+            const notification = document.createElement('div');
+            notification.className = 'added-to-cart-notification';
+            notification.innerHTML = `
+                <div class="notification-check">✓</div>
+                <div class="notification-text">
+                    <div class="notification-title">Added to Cart!</div>
+                    <div class="notification-item">${title}</div>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 300);
+            }, 2500);
+        }
+
+        function removeFromCart(index) {
+            // Remove item by index to avoid URL character issues
+            if (index >= 0 && index < cart.length) {
+                const removedItem = cart[index];
+                cart.splice(index, 1);
+                saveCart();
+                updateCartUI();
+                
+                // Show feedback
+                showCartNotification(`${removedItem.title} removed from cart`);
+            }
+        }
+
+        function updateCartUI() {
+            // Update badge
+            document.getElementById('cartBadge').textContent = cart.length;
+            
+            // Update Cart Modal Content
+            const container = document.getElementById('cartItemsContainer');
+            const totalEl = document.getElementById('cartTotal');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            const payTotalAmount = document.getElementById('payTotalAmount');
+            
+            if (cart.length === 0) {
+                container.innerHTML = '<p class="text-center text-muted py-5">Your cart is empty.</p>';
+                totalEl.textContent = '₹0';
+                checkoutBtn.disabled = true;
+                return;
+            }
+
+            checkoutBtn.disabled = false;
+            let total = 0;
+            let html = '<div class="list-group">';
+            
+            cart.forEach((item, index) => {
+                total += item.price;
+                html += `
+                    <div class="list-group-item d-flex justify-content-between align-items-center mb-2 rounded cart-item-row" data-index="${index}" style="background: rgba(0,0,0,0.05); border: none;">
+                        <div>
+                            <h5 class="mb-1 text-dark">${item.title}</h5>
+                            <small class="text-success fw-bold">₹${item.price}</small>
+                        </div>
+                        <button class="btn btn-outline-danger btn-sm remove-cart-btn" data-index="${index}">Remove</button>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            container.innerHTML = html;
+            totalEl.textContent = `₹${total}`;
+            if(payTotalAmount) payTotalAmount.textContent = `₹${total}`;
+            
+            // Attach event listeners to remove buttons using event delegation
+            document.querySelectorAll('.remove-cart-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    removeFromCart(index);
+                });
+            });
+        }
+        
+        function showCartNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'cart-notification';
+            notification.innerHTML = `<i class="fas fa-trash"></i> ${message}`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // Modal Controls
+        function openCart() {
+            document.getElementById('cartModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            updateCartUI();
+        }
+
+        function closeCart() {
+            document.getElementById('cartModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function proceedToCheckout() {
+            if (cart.length === 0) return;
+            closeCart();
+            document.getElementById('checkoutModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            // Reset checkout state
+            document.getElementById('checkoutForm').style.display = 'block';
+            document.getElementById('checkoutSuccess').style.display = 'none';
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkoutModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function filterShop() {
+            const searchQ = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const items = document.querySelectorAll('.product-item');
+
+            items.forEach(item => {
+                const title = item.getAttribute('data-name').toLowerCase();
+                const itemCat = item.getAttribute('data-category');
+                
+                const matchesSearch = title.includes(searchQ);
+                const matchesCat = (category === 'all' || itemCat === category);
+                
+                if (matchesSearch && matchesCat) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Handle Payment method toggle UI
+        document.querySelectorAll('input[name="paymentMethod"]').forEach(el => {
+            el.addEventListener('change', function() {
+                const cardSection = document.getElementById('cardDetailsSection');
+                if (this.value === 'Card') {
+                    cardSection.style.display = 'block';
+                } else {
+                    cardSection.style.display = 'none';
+                }
+            });
+        });
+
+        function processPayment() {
+            const name = document.getElementById('checkoutName').value;
+            const email = document.getElementById('checkoutEmail').value;
+            const phone = document.getElementById('checkoutPhone').value;
+            const address = document.getElementById('checkoutAddress').value;
+            
+            // Comprehensive validation
+            if (!name.trim()) {
+                alert('Please enter your full name.');
+                document.getElementById('checkoutName').focus();
+                return;
+            }
+            
+            if (!email.trim() || !email.includes('@')) {
+                alert('Please enter a valid email address.');
+                document.getElementById('checkoutEmail').focus();
+                return;
+            }
+            
+            if (!phone.trim() || phone.replace(/\D/g, '').length < 10) {
+                alert('Please enter a valid phone number.');
+                document.getElementById('checkoutPhone').focus();
+                return;
+            }
+            
+            if (!address.trim()) {
+                alert('Please enter your billing address.');
+                document.getElementById('checkoutAddress').focus();
+                return;
+            }
+            
+            const btn = document.getElementById('payBtn');
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing Secure Payment...';
+            btn.disabled = true;
+            
+            // Calculate subtotal, tax, and total
+            const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+            const taxRate = 0.18; // 18% GST
+            const taxAmount = Math.round(subtotal * taxRate * 100) / 100;
+            const total = subtotal + taxAmount;
+            
+            // Generate invoice number with timestamp
+            const timestamp = new Date().getTime();
+            const invoiceNum = 'INV-' + timestamp;
+            const transactionId = 'TXN-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+            
+            // Save comprehensive order info for receipt
+            window.lastOrder = {
+                invoiceNumber: invoiceNum,
+                transactionId: transactionId,
+                orderId: 'ORD-' + Math.floor(Math.random() * 1000000),
+                date: new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' }),
+                time: new Date().toLocaleTimeString('en-IN'),
+                name: name.trim(),
+                email: email.trim(),
+                phone: phone.trim(),
+                address: address.trim(),
+                method: document.querySelector('input[name="paymentMethod"]:checked').value,
+                items: [...cart],
+                subtotal: subtotal,
+                taxRate: taxRate,
+                taxAmount: taxAmount,
+                total: total,
+                formattedTotal: `₹${total}`,
+                formattedSubtotal: `₹${subtotal}`,
+                formattedTax: `₹${taxAmount.toFixed(2)}`
+            };
+
+            // Simulate secure payment processing
+            setTimeout(() => {
+                showSuccessScreen();
+            }, 2000);
+        }
+
+        function downloadReceipt() {
+            if (!window.lastOrder) return;
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const order = window.lastOrder;
+            
+            // Color scheme
+            const primaryColor = [106, 166, 255];
+            const accentColor = [155, 107, 255];
+            const successColor = [46, 204, 113];
+            const darkText = [40, 40, 40];
+            const lightGray = [100, 100, 100];
+            const lineColor = [220, 220, 220];
+            
+            // Header Background
+            doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+            doc.rect(0, 0, 210, 50, 'F');
+            
+            // Title
+            doc.setFontSize(28);
+            doc.setTextColor(255, 255, 255);
+            doc.setFont("helvetica", "bold");
+            doc.text("SkillUp PDFs", 20, 25);
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text("Premium Learning Resources", 20, 35);
+            
+            // Invoice Number & Status Badge
+            doc.setFontSize(9);
+            doc.setTextColor(successColor[0], successColor[1], successColor[2]);
+            doc.setFont("helvetica", "bold");
+            doc.text("PAID", 170, 20);
+            doc.setFontSize(8);
+            doc.setTextColor(200, 200, 200);
+            doc.setFont("helvetica", "normal");
+            doc.text("Invoice: " + order.invoiceNumber, 170, 28);
+            doc.text("TXN ID: " + order.transactionId.substring(0, 12) + "...", 170, 35);
+            
+            // Main content starts
+            let yPos = 60;
+            
+            // Order Details Section
+            doc.setFillColor(240, 245, 255);
+            doc.rect(20, yPos - 5, 170, 25, 'F');
+            doc.setFontSize(10);
+            doc.setTextColor(darkText[0], darkText[1], darkText[2]);
+            doc.setFont("helvetica", "bold");
+            doc.text("Order #" + order.orderId, 25, yPos + 3);
+            
+            doc.setFontSize(9);
+            doc.setFont("helvetica", "normal");
+            doc.text("Date: " + order.date + " at " + order.time, 25, yPos + 11);
+            doc.text("Payment: " + order.method, 25, yPos + 18);
+            
+            yPos += 35;
+            
+            // Bill To Section
+            doc.setFontSize(11);
+            doc.setTextColor(darkText[0], darkText[1], darkText[2]);
+            doc.setFont("helvetica", "bold");
+            doc.text("BILL TO:", 20, yPos);
+            
+            yPos += 8;
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "bold");
+            doc.text(order.name, 20, yPos);
+            
+            yPos += 6;
+            doc.setFontSize(9);
+            doc.setFont("helvetica", "normal");
+            doc.text("Email: " + order.email, 20, yPos);
+            yPos += 5;
+            doc.text("Phone: " + order.phone, 20, yPos);
+            yPos += 8;
+            const addrLines = doc.splitTextToSize(order.address, 90);
+            doc.text(addrLines, 20, yPos);
+            yPos += (addrLines.length * 5) + 8;
+            
+            // Items Table Header
+            doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+            doc.setTextColor(255, 255, 255);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(10);
+            doc.text("ITEMS", 25, yPos);
+            doc.text("QTY", 140, yPos);
+            doc.text("PRICE", 175, yPos);
+            
+            yPos += 7;
+            doc.setDrawColor(lineColor[0], lineColor[1], lineColor[2]);
+            doc.line(20, yPos, 190, yPos);
+            yPos += 5;
+            
+            // Items
+            doc.setTextColor(darkText[0], darkText[1], darkText[2]);
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(9);
+            
+            order.items.forEach((item, idx) => {
+                const titleLines = doc.splitTextToSize(item.title, 100);
+                doc.text(titleLines, 25, yPos);
+                doc.text("1", 140, yPos);
+                doc.text("RS " + item.price, 175, yPos);
+                yPos += (titleLines.length * 5) + 3;
+            });
+            
+            yPos += 3;
+            doc.setDrawColor(lineColor[0], lineColor[1], lineColor[2]);
+            doc.line(20, yPos, 190, yPos);
+            yPos += 8;
+            
+            // Summary Section
+            doc.setFontSize(10);
+            doc.setTextColor(lightGray[0], lightGray[1], lightGray[2]);
+            doc.setFont("helvetica", "normal");
+            doc.text("Subtotal:", 130, yPos);
+            doc.setTextColor(darkText[0], darkText[1], darkText[2]);
+            doc.text(order.formattedSubtotal, 175, yPos);
+            
+            yPos += 7;
+            doc.setTextColor(lightGray[0], lightGray[1], lightGray[2]);
+            doc.text("GST (18%):", 130, yPos);
+            doc.setTextColor(darkText[0], darkText[1], darkText[2]);
+            doc.text(order.formattedTax, 175, yPos);
+            
+            yPos += 10;
+            doc.setFillColor(accentColor[0], accentColor[1], accentColor[2]);
+            doc.rect(130, yPos - 6, 60, 10, 'F');
+            doc.setFontSize(12);
+            doc.setTextColor(255, 255, 255);
+            doc.setFont("helvetica", "bold");
+            doc.text("TOTAL", 133, yPos - 1);
+            doc.text(order.formattedTotal, 175, yPos - 1);
+            
+            // Footer
+            yPos = 260;
+            doc.setFontSize(8);
+            doc.setTextColor(150, 150, 150);
+            doc.setFont("helvetica", "italic");
+            doc.text("Thank you for learning with us!", 105, yPos, null, null, "center");
+            doc.text("All resources are for educational purposes.", 105, yPos + 5, null, null, "center");
+            
+            doc.setFontSize(7);
+            doc.text("www.skilluppdfs.com | support@skilluppdfs.com", 105, yPos + 11, null, null, "center");
+            
+            // Terms
+            doc.setDrawColor(220, 220, 220);
+            doc.line(10, 270, 200, 270);
+            doc.setFontSize(6);
+            doc.text("Terms & Conditions apply. Downloaded files are for personal use only.", 10, 275);
+            
+            doc.save("SkillUp_Receipt_" + order.orderId + ".pdf");
+        }
+
+        function showSuccessScreen() {
+            document.getElementById('checkoutForm').style.display = 'none';
+            const dlContainer = document.getElementById('downloadLinksContainer');
+            const order = window.lastOrder;
+            
+            // Update order details in success screen
+            document.getElementById('successOrderId').textContent = order.orderId;
+            document.getElementById('successDate').textContent = order.date;
+            document.getElementById('successEmail').textContent = order.email;
+            document.getElementById('successTotal').textContent = order.formattedTotal;
+            
+            let linksHtml = '';
+            cart.forEach((item, idx) => {
+                linksHtml += `
+                    <div class="download-item-card">
+                        <div class="item-info">
+                            <div class="item-icon">📄</div>
+                            <div class="item-details">
+                                <div class="item-title">${item.title}</div>
+                                <div class="item-price">₹${item.price}</div>
+                            </div>
+                        </div>
+                        <a href="${item.url}" download class="btn btn-primary btn-sm px-4">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                `;
+            });
+            dlContainer.innerHTML = linksHtml;
+            document.getElementById('checkoutSuccess').style.display = 'block';
+            
+            // Empty the cart after successful purchase
+            cart = [];
+            saveCart();
+            
+            const btn = document.getElementById('payBtn');
+            btn.innerHTML = 'Pay <span id="payTotalAmount"></span>';
+            btn.disabled = false;
+        }
+
+        function emailReceipt() {
+            const order = window.lastOrder;
+            if (!order) return;
+            
+            // Create email simulation
+            const emailBtn = event.target;
+            const originalHTML = emailBtn.innerHTML;
+            emailBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sending...';
+            emailBtn.disabled = true;
+            
+            setTimeout(() => {
+                // Simulate email sent
+                emailBtn.innerHTML = '<i class="fas fa-check"></i> Sent to ' + order.email;
+                emailBtn.style.backgroundColor = '#2ecc71';
+                emailBtn.style.borderColor = '#2ecc71';
+                emailBtn.disabled = true;
+                
+                // Show notification
+                const notification = document.createElement('div');
+                notification.className = 'email-notification';
+                notification.innerHTML = `
+                    <div class="notification-content">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Receipt sent to <strong>${order.email}</strong></span>
+                    </div>
+                `;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => notification.remove(), 4000);
+            }, 1500);
+        }
+
+        function init() {
+            loadCart();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+
+        // Expose functions to global scope for onclick handlers
+        window.addToCart = addToCart;
+        window.removeFromCart = removeFromCart;
+        window.openCart = openCart;
+        window.closeCart = closeCart;
+        window.proceedToCheckout = proceedToCheckout;
+        window.closeCheckout = closeCheckout;
+        window.processPayment = processPayment;
+        window.downloadReceipt = downloadReceipt;
+        window.emailReceipt = emailReceipt;
+        window.openPDFPreview = openPDFPreview;
+        window.closePDFPreview = closePDFPreview;
+        window.filterShop = filterShop;
+      })();
+    </script>
 </body>
 </html>

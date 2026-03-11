@@ -378,3 +378,434 @@ body {
 .download-btn:hover {
     background: #2980b9;
 }
+
+/* Dynamic Navbar & Cart Badge */
+.navbar {
+    border-bottom: 1px solid var(--glass-border);
+    background: rgba(11, 16, 32, 0.4) !important;
+    backdrop-filter: blur(8px);
+    z-index: 100;
+}
+.cart-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 999px;
+    padding: 8px 16px;
+    transition: all 0.2s;
+}
+.cart-btn:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+}
+.cart-btn .badge {
+    transition: transform 0.2s;
+}
+
+/* Price Tags */
+.price-tag {
+    font-size: 1.1rem;
+    color: var(--success);
+    background: rgba(46, 204, 113, 0.1);
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-left: 4px;
+}
+
+/* Cart & Checkout Specific Overrides */
+.cart-modal-content {
+    max-width: 600px;
+    height: auto;
+    max-height: 80vh;
+}
+.cart-modal-content .modal-body {
+    overflow-y: auto;
+}
+#cartItemsContainer .list-group-item {
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+#cartItemsContainer .list-group-item:hover {
+    background: rgba(0,0,0,0.08) !important;
+    transform: scale(1.02);
+}
+.checkout-modal-content .form-control {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ccc;
+    color: #333;
+}
+.checkout-modal-content .form-label {
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+/* Success Screen Styles */
+.success-screen {
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240,245,255,0.98) 100%);
+    border-radius: 8px;
+    animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.success-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #e8e8e8;
+}
+
+.success-icon {
+    display: inline-block;
+    font-size: 4rem;
+    margin-bottom: 0.5rem;
+    animation: bounce 0.6s ease;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.success-title {
+    font-size: 1.8rem;
+    color: #333;
+    margin: 0.5rem 0;
+    font-weight: 700;
+}
+
+.success-subtitle {
+    color: #666;
+    font-size: 1rem;
+    margin: 0.5rem 0 0;
+}
+
+.order-summary-card {
+    background: linear-gradient(135deg, #f0f5ff 0%, #f5f0ff 100%);
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.summary-row:last-child {
+    border-bottom: none;
+}
+
+.summary-row.summary-total {
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 1rem 0 0;
+    margin-top: 0.5rem;
+    border-top: 2px solid #ddd;
+    color: #155724;
+}
+
+.summary-label {
+    color: #555;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.summary-value {
+    color: #333;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.summary-row.summary-total .summary-value {
+    color: #28a745;
+    font-size: 1.3rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin: 2rem 0 1.5rem;
+    flex-wrap: wrap;
+}
+
+.action-buttons .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.action-buttons .btn-primary {
+    background: linear-gradient(135deg, #6aa6ff, #9b6bff);
+    color: white;
+    border: none;
+}
+
+.action-buttons .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(106, 166, 255, 0.4);
+}
+
+.action-buttons .btn-outline-primary {
+    background: white;
+    color: #6aa6ff;
+    border: 2px solid #6aa6ff;
+}
+
+.action-buttons .btn-outline-primary:hover {
+    background: #f0f5ff;
+    transform: translateY(-2px);
+}
+
+.downloads-section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid #e8e8e8;
+}
+
+.downloads-title {
+    color: #333;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.downloads-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1rem;
+}
+
+.download-item-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.download-item-card:hover {
+    border-color: #6aa6ff;
+    box-shadow: 0 4px 16px rgba(106, 166, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.item-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.item-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.item-details {
+    min-width: 0;
+}
+
+.item-title {
+    color: #333;
+    font-weight: 600;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.item-price {
+    color: #28a745;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-top: 0.25rem;
+}
+
+.download-item-card .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    margin-left: 1rem;
+    flex-shrink: 0;
+}
+
+/* Email Notification */
+.email-notification {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(46, 204, 113, 0.3);
+    z-index: 9999;
+    animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(400px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+}
+
+.notification-content i {
+    font-size: 1.2rem;
+}
+
+/* Cart Added Notification */
+.added-to-cart-notification {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: linear-gradient(135deg, #6aa6ff 0%, #9b6bff 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(106, 166, 255, 0.4);
+    z-index: 9998;
+    animation: slideInRight 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 280px;
+    transition: opacity 0.3s ease;
+}
+
+.notification-check {
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.2);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.notification-text {
+    flex: 1;
+}
+
+.notification-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.notification-item {
+    font-size: 0.8rem;
+    opacity: 0.95;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Cart Removal Notification */
+.cart-notification {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(255, 107, 107, 0.3);
+    z-index: 9998;
+    animation: slideInLeft 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-400px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.cart-notification i {
+    font-size: 1.2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .action-buttons .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .downloads-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .download-item-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .download-item-card .btn {
+        margin-left: 0;
+        margin-top: 1rem;
+        width: 100%;
+    }
+    
+    .email-notification {
+        bottom: 1rem;
+        right: 1rem;
+        left: 1rem;
+    }
+}
